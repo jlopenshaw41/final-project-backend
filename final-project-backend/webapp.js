@@ -1,16 +1,13 @@
-import { join } from 'path';
-import express, { static } from 'express';
+import express from 'express';
 import { urlencoded } from 'body-parser';
-import session from 'express-session';
-import flash from 'connect-flash';
 import morgan from 'morgan';
 import { secret as _secret } from './config';
+import {} from './controllers/subscriberControllers';
+import message from './controllers/message';
 
 const app = express();
-
-app.set('view engine', 'jade');
+app.use(express.json());
 app.use(morgan('combined'));
-app.use(static(join(__dirname, 'public')));
 app.use(
   urlencoded({
     extended: true,
@@ -23,21 +20,14 @@ app.use(
     saveUninitialized: true,
   })
 );
-app.use(flash());
 
-require('./controllers/router').default(app);
+app.post('/add-subscriber', subscriberControllers.create);
+app.post('/subscribers/send-message', message.sendMessages);
 
-app.use((req, res, next) => {
-  res.status(404);
-  res.sendFile(join(__dirname, 'public', '404.html'));
-});
+app.get('/subscribers', subscriberControllers.list);
 
-app.use((err, req, res, next) => {
-  console.error('An application error has occurred:');
-  console.error(err);
-  console.error(err.stack);
-  res.status(500);
-  res.sendFile(join(__dirname, 'public', '500.html'));
-});
+app.patch('/subscribers/:id', subscriberControllers.update);
+
+app.delete('/subscribers/:id', subscriberControllers.deleteSubscriber);
 
 export default app;

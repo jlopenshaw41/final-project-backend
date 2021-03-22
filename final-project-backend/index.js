@@ -1,15 +1,7 @@
-import { createServer } from 'http';
-import { connect, Promise as _Promise } from 'mongoose';
-import { mongoURL, port } from './config';
+import { listen } from './webapp';
 
-connect(mongoURL);
+const PORT = 4000;
 
-_Promise = Promise;
-
-import app from './webapp';
-
-const server = createServer(app);
-
-server.listen(port, () => {
-  console.log(`Express server listening on Port ${port}`);
+listen(PORT, () => {
+  console.log(`Express server listening on Port ${PORT}`);
 });
