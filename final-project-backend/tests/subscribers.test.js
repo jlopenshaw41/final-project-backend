@@ -1,7 +1,7 @@
-import { Subscriber } from '../src/models';
-import { expect } from 'chai';
-import request from 'supertest';
-import app from '../webapp';
+const { Subscriber } = require('../src/models');
+const { expect } = require('chai');
+const request = require('supertest');
+const app = require('../webapp');
 
 describe('/subscribers', () => {
   before(async () => {
