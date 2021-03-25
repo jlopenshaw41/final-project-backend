@@ -3,7 +3,7 @@ module.exports = (connection, DataTypes) => {
     email: DataTypes.STRING,
     phone: DataTypes.STRING,
     password: DataTypes.STRING,
-    subscribed: DataTypes.BOOLEAN,
+    subscribe: DataTypes.BOOLEAN,
   };
   const SubscriberModel = connection.define('Subscriber', schema);
   return SubscriberModel;

@@ -1,4 +1,4 @@
-require('dotenv-safe').configp();
+require('dotenv-safe').config();
 
 const cfg = {};
 
