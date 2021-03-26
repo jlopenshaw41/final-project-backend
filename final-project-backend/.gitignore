@@ -3,5 +3,3 @@
 node_modules
 
 .env.test
-
-.env.example

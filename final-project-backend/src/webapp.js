@@ -69,6 +69,7 @@ cron.schedule('*/30 * * * *', () => {
 //Cron functionality//
 
 app.post('/add-subscriber', subscriberControllers.create);
+
 app.post('/subscribers/send-message', message.sendMessages);
 
 app.get('/subscribers', subscriberControllers.list);
