@@ -39,7 +39,6 @@ cron.schedule('*/30 * * * *', () => {
           currentTime,
           timePreviousMessageSent
         );
-        console.log(timeElapsedSincePreviousMessage);
         if (timeElapsedSincePreviousMessage > 10) {
           console.log(
             `Status: Current low carbon energy proportion is ${Math.floor(
@@ -69,6 +68,7 @@ cron.schedule('*/30 * * * *', () => {
 //Cron functionality//
 
 app.post('/add-subscriber', subscriberControllers.create);
+
 app.post('/subscribers/send-message', message.sendMessages);
 
 app.get('/subscribers', subscriberControllers.list);
