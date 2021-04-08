@@ -1,6 +1,7 @@
 const axios = require('axios');
-
+const { Subscriber } = require('../models');
 let timePreviousMessageSent = new Date();
+const messageSender = require('../lib/messageSender');
 
 const getDifferenceInHours = (date2, date1) => {
   let diff = (date2.getTime() - date1.getTime()) / 1000;
@@ -27,11 +28,31 @@ const energyMessage = () => {
           timePreviousMessageSent
         );
         if (timeElapsedSincePreviousMessage > 10) {
-          console.log(
-            `Status: Current low carbon energy proportion is ${Math.floor(
-              currentGreenEnergyProportion * 100
-            )}%. Sending messages...`
-          );
+          // console.log(
+          //   `Status: Current low carbon energy proportion is ${Math.floor(
+          //     currentGreenEnergyProportion * 100
+          //   )}%. Sending messages...`
+          // );
+          Subscriber.findAll({
+            where: {
+              subscribe: true,
+            },
+          })
+            .then((subscribers) => {
+              messageSender.sendMessageToSubscribers(
+                subscribers,
+                `Current low carbon energy proportion is ${Math.floor(
+                  currentGreenEnergyProportion * 100
+                )}%. You are an eco-champion!`
+              );
+            })
+            .then(() => {
+              res.status(200).send('Success! Your message(s) have been sent.');
+            })
+            .catch((err) => {
+              console.log(`Err ${err.message}`);
+              res.status(500).send(err.message);
+            });
           timePreviousMessageSent = new Date();
         } else {
           return console.log(

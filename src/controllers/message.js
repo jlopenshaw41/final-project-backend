@@ -1,11 +1,11 @@
-const { Subscriber } = require('../models/subscriber');
+const { Subscriber } = require('../models');
 const messageSender = require('../lib/messageSender');
 
 exports.sendMessages = (req, res) => {
   const message = req.body.message;
   Subscriber.findAll({
     where: {
-      subscribed: true,
+      subscribe: true,
     },
   })
     .then((subscribers) => {
