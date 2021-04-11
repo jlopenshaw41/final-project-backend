@@ -1,7 +1,7 @@
 const { Subscriber } = require('../src/models');
 const { expect } = require('chai');
 const request = require('supertest');
-const app = require('../webapp');
+const app = require('../src/webapp');
 
 describe('/subscribers', () => {
   before(async () => {
@@ -24,20 +24,20 @@ describe('/subscribers', () => {
 
   describe('POST /add-subscriber', async () => {
     it('creates a new subscriber in the database', async () => {
-      const response = await (await request(app).post('/add-subscriber')).send({
-        phone: '+447321089509',
-        subscribed: true,
+      const response = await request(app).post('/add-subscriber').send({
+        phone: '+447921089509',
+        subscribe: true,
       });
       expect(response.status).to.equal(201);
       expect(response.body.phone).to.equal('+447921089509');
-      expect(response.body.subscribed).to.be.true;
+      expect(response.body.subscribe).to.be.true;
 
       const newSubscriberRecord = await Subscriber.findByPk(response.body.id, {
         raw: true,
       });
 
-      expect(newSubscriberRecord.phone).to.equal('+44792108509');
-      expect(newSubscriberRecord.subscribed).to.equal(1);
+      expect(newSubscriberRecord.phone).to.equal('+447921089509');
+      expect(newSubscriberRecord.subscribe).to.equal(1);
     });
   });
 
@@ -45,9 +45,9 @@ describe('/subscribers', () => {
     let subscribers;
     beforeEach((done) => {
       Promise.all([
-        Subscriber.create({ phone: '+441234567891', subscribed: true }),
-        Subscriber.create({ phone: '+441234567892', subscribed: true }),
-        Subscriber.create({ phone: '+441234567893', subscribed: true }),
+        Subscriber.create({ phone: '+441234567891', subscribe: true }),
+        Subscriber.create({ phone: '+441234567892', subscribe: true }),
+        Subscriber.create({ phone: '+441234567893', subscribe: true }),
       ]).then((documents) => {
         subscribers = documents;
         done();
@@ -63,7 +63,7 @@ describe('/subscribers', () => {
             res.body.forEach((subscriber) => {
               const expected = subscribers.find((a) => a.id === subscriber.id);
               expect(subscriber.phone).to.equal(expected.phone);
-              expect(subscriber.subscribed).to.equal(expected.subscribed);
+              expect(subscriber.subscribe).to.equal(expected.subscribe);
             });
             done();
           })
@@ -91,13 +91,13 @@ describe('/subscribers', () => {
         const subscriber = subscribers[0];
         request(app)
           .patch(`/subscribers/${subscriber.id}`)
-          .send({ subscribed: false })
+          .send({ subscribe: false })
           .then((res) => {
             expect(res.status).to.equal(200);
             Subscriber.findByPk(subscriber.id, {
               raw: true,
             }).then((updatedSubscriber) => {
-              expect(updatedSubscriber.subscribed).to.equal(0);
+              expect(updatedSubscriber.subscribe).to.equal(0);
               done();
             });
           })

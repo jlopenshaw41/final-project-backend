@@ -28,11 +28,6 @@ const energyMessage = () => {
           timePreviousMessageSent
         );
         if (timeElapsedSincePreviousMessage > 10) {
-          // console.log(
-          //   `Status: Current low carbon energy proportion is ${Math.floor(
-          //     currentGreenEnergyProportion * 100
-          //   )}%. Sending messages...`
-          // );
           Subscriber.findAll({
             where: {
               subscribe: true,
