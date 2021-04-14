@@ -36,7 +36,7 @@ const energyMessage = () => {
             .then((subscribers) => {
               messageSender.sendMessageToSubscribers(
                 subscribers,
-                `Current low carbon energy proportion is ${Math.floor(
+                `From test app: Current low carbon energy proportion is ${Math.floor(
                   currentGreenEnergyProportion * 100
                 )}%. You are an eco-champion!`
               );
