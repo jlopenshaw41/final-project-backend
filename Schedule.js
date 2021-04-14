@@ -1,5 +1,5 @@
-const schedule = require('node-schedule');
+const schedule = require("node-schedule");
 
-schedule.scheduleJob('*/15 * * * *', ()=>{
-    // Execute something every 15 minutes
+schedule.scheduleJob("*/15 * * * *", () => {
+  console.log("Testing, testing...");
 });
