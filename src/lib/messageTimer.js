@@ -21,13 +21,13 @@ const energyMessage = () => {
         energyMix.biomass.proportion +
         energyMix.hydro.proportion +
         energyMix.nuclear.proportion;
-      if (currentGreenEnergyProportion > 0.3) {
+      if (currentGreenEnergyProportion > 0.4) {
         const currentTime = new Date();
         const timeElapsedSincePreviousMessage = getDifferenceInHours(
           currentTime,
           timePreviousMessageSent
         );
-        if (timeElapsedSincePreviousMessage >= 0) {
+        if (timeElapsedSincePreviousMessage > 10) {
           Subscriber.findAll({
             where: {
               subscribe: true,
