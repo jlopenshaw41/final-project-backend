@@ -21,6 +21,10 @@ app.post('/add-subscriber', subscriberControllers.create);
 
 app.post('/subscribers/send-message', message.sendMessages);
 
+app.get('/', (req, res) => {
+  res.status(200);
+})
+
 app.get('/subscribers', subscriberControllers.list);
 
 app.patch('/subscribers/:id', subscriberControllers.update);
