@@ -36,10 +36,12 @@ const energyMessage = () => {
 
           console.log(`Previous message sent at: ${timePreviousMessageSent}`);
 
-          timeElapsedSincePreviousMessage = getDifferenceInHours(
-            currentTime,
-            timePreviousMessageSent
-          );
+          if (timePreviousMessageSent !== null) {
+            timeElapsedSincePreviousMessage = getDifferenceInHours(
+              currentTime,
+              timePreviousMessageSent
+            );
+          }
 
           console.log(
             `Time elapsed since previous message: ${timeElapsedSincePreviousMessage}`
