@@ -14,7 +14,7 @@ const getDifferenceInHours = (date2, date1) => {
 const energyMessage = () => {
   const currentHour = new Date().getHours();
   console.log(`Current hour: ${currentHour}`);
-  if (currentHour >= 7 && currentHour <= 21) {
+  if (currentHour >= 6 && currentHour <= 21) {
     axios.get("https://api.reactive.energy/energy-mix").then((res) => {
       const energyMix = res.data;
       const currentGreenEnergyProportion =
