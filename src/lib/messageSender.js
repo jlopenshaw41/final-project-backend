@@ -1,6 +1,7 @@
-const twilio = require('twilio');
-const config = require('../../config');
+const twilio = require("twilio");
+const config = require("../../config");
 const client = twilio(config.accountSid, config.authToken);
+const { Subscriber } = require("../models");
 
 const sendSingleTwilioMessage = (subscriber, message) => {
   const options = {
@@ -25,10 +26,17 @@ const sendSingleTwilioMessage = (subscriber, message) => {
 const sendMessageToSubscribers = (subscribers, message) => {
   return new Promise((resolve, reject) => {
     if (subscribers.length == 0) {
-      reject({ message: 'Could not find any subscribers!' });
+      reject({ message: "Could not find any subscribers!" });
     } else {
       subscribers
         .map((subscriber) => {
+          // update timestamp in database
+          let currentTime = new Date();
+          Subscriber.update(
+            { messageSent: currentTime },
+            { where: { id: subscriber.id } }
+          );
+          //
           return sendSingleTwilioMessage(subscriber, message);
         })
         .reduce((all, currentPromise) => {

@@ -1,7 +1,9 @@
-const axios = require('axios');
-const { Subscriber } = require('../models');
-let timePreviousMessageSent = new Date();
-const messageSender = require('../lib/messageSender');
+const axios = require("axios");
+const { Subscriber } = require("../models");
+const messageSender = require("../lib/messageSender");
+
+let timePreviousMessageSent;
+let timeElapsedSincePreviousMessage;
 
 const getDifferenceInHours = (date2, date1) => {
   let diff = (date2.getTime() - date1.getTime()) / 1000;
@@ -11,9 +13,9 @@ const getDifferenceInHours = (date2, date1) => {
 
 const energyMessage = () => {
   const currentHour = new Date().getHours();
-  console.log(currentHour);
-  if (currentHour >= 8 && currentHour <= 21) {
-    axios.get('https://api.reactive.energy/energy-mix').then((res) => {
+  console.log(`Current hour: ${currentHour}`);
+  if (currentHour >= 7 && currentHour <= 21) {
+    axios.get("https://api.reactive.energy/energy-mix").then((res) => {
       const energyMix = res.data;
       const currentGreenEnergyProportion =
         energyMix.wind.proportion +
@@ -21,13 +23,30 @@ const energyMessage = () => {
         energyMix.biomass.proportion +
         energyMix.hydro.proportion +
         energyMix.nuclear.proportion;
-      if (currentGreenEnergyProportion > 0.4) {
+      if (currentGreenEnergyProportion > 0.3) {
         const currentTime = new Date();
-        const timeElapsedSincePreviousMessage = getDifferenceInHours(
-          currentTime,
-          timePreviousMessageSent
-        );
-        if (timeElapsedSincePreviousMessage > 10) {
+
+        // put timePrevMessageSent logic here
+
+        Subscriber.findAll({
+          where: {
+            subscribe: true,
+          },
+        }).then((subscribers) => {
+          timePreviousMessageSent = subscribers[0].messageSent;
+          console.log(`Previous message sent at: ${timePreviousMessageSent}`);
+          timeElapsedSincePreviousMessage = getDifferenceInHours(
+            currentTime,
+            timePreviousMessageSent
+          );
+        });
+
+        //
+
+        if (
+          timePreviousMessageSent === null ||
+          timeElapsedSincePreviousMessage > 10
+        ) {
           Subscriber.findAll({
             where: {
               subscribe: true,
@@ -42,16 +61,15 @@ const energyMessage = () => {
               );
             })
             .then(() => {
-              res.status(200).send('Success! Your message(s) have been sent.');
+              res.status(200).send("Success! Your message(s) have been sent.");
             })
             .catch((err) => {
               console.log(`Err ${err.message}`);
               res.status(500).send(err.message);
             });
-          timePreviousMessageSent = new Date();
         } else {
           return console.log(
-            'Status: It has not been 10 hours since the previous message. No message sent.'
+            "Status: It has not been 10 hours since the previous message. No message sent."
           );
         }
       } else {
@@ -64,7 +82,7 @@ const energyMessage = () => {
     });
   } else {
     return console.log(
-      'Status: Do not disturb is active. Only send messages between 08:00 and 21:00. No messages sent.'
+      "Status: Do not disturb is active. Only send messages between 08:00 and 21:00. No messages sent."
     );
   }
 };
