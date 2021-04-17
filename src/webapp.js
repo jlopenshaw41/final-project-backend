@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-cron.schedule('*/60 * * * * *', () => {
+cron.schedule('* * * * *', () => {
   return energyMessage();
 });
 
