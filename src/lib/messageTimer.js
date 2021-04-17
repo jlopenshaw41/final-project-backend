@@ -23,7 +23,7 @@ const energyMessage = () => {
         energyMix.biomass.proportion +
         energyMix.hydro.proportion +
         energyMix.nuclear.proportion;
-      if (currentGreenEnergyProportion > 0.45) {
+      if (currentGreenEnergyProportion > 0.3) {
         const currentTime = new Date();
 
         // put timePrevMessageSent logic here
@@ -39,6 +39,7 @@ const energyMessage = () => {
             currentTime,
             timePreviousMessageSent
           );
+          console.log(`Time elapsed since previous message: ${timeElapsedSincePreviousMessage}`);
         });
 
         //
